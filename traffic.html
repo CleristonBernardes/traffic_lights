@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/qunit-2.1.1.js"></script>
+<script src="assets/js/traffic_tests.js"></script>
+<script src="assets/js/global_variables.js"></script>
+
+<link rel="stylesheet" href="assets/css/traffic.css">
+<link rel="stylesheet" href="assets/css/qunit-2.1.1.css">
+<script>
+
+//G = green, Y = yellow, R = red
+
+switch_light = function(){
+
+  global_timer += (global_timer <= Number.MAX_VALUE) ? _30sec : 0;
+  keep_log = (global_timer <= _30min);
+
+  //only consider from 30 seconds before a cicle
+  if (timer < _4min_30sec){
+    timer += _30sec;
+    return;
+  }
+
+  $ns = $(".js-traffic-n-s");
+  ns_light = $ns.data("light");
+  if (ns_light === "G" && timer === _4min_30sec){
+    $ns.data("light", "Y");
+    $ns.removeClass("traffic-green").addClass("traffic-yellow");
+  }
+  else if (ns_light === "Y" && timer === _5min){
+    $ns.data("light", "R");
+    $ns.removeClass("traffic-yellow").addClass("traffic-red");
+  }
+  else if (ns_light === "R" && timer === _5min){
+    $ns.data("light", "G");
+    $ns.removeClass("traffic-red").addClass("traffic-green");
+  }
+  if (keep_log && ns_light !==$ns.data("light"))
+    console.debug(new Date()+" -> N-S trafic switched from " + ns_light + " to " + $ns.data("light"));
+
+  $ew = $(".js-traffic-e-w");
+  ew_light = $ew.data("light");
+  if (ew_light === "G" && timer === _4min_30sec){
+    $ew.data("light", "Y");
+    $ew.removeClass("traffic-green").addClass("traffic-yellow");
+  }
+  else if (ew_light === "Y" && timer === _5min){
+    $ew.data("light", "R");
+    $ew.removeClass("traffic-yellow").addClass("traffic-red");
+  }
+  else if (ew_light === "R" && timer === _5min){
+    $ew.data("light", "G");
+    $ew.removeClass("traffic-red").addClass("traffic-green");
+  }
+
+  if (keep_log && ew_light !== $ew.data("light"))
+    console.debug(new Date()+" -> E-W trafic switched from " + ew_light + " to " + $ew.data("light"));
+
+
+  if (timer === _5min)
+    timer = _30sec; //restarting the cicle
+  else
+    timer += _30sec;
+
+
+}
+
+start_traffic_lights = function(){
+  interval = setInterval(switch_light, _30sec * 1000); //30 seconds loop
+}
+
+run_all_tests = function(){
+  //stopping app
+  console.debug("traffic light stopped");
+  clearInterval(interval);
+  $(".js-test").text("Running tests...");
+  $(".js-test").attr("disabled", true);
+
+  red_light_check();
+  yellow_light_check();
+  green_light_check();
+  check_log_limit();
+  check_log_active();
+  check_long_period();
+  check_timer();
+
+  //starting app
+  console.debug("traffic light started");
+  init();
+  reset_lights();
+  start_traffic_lights();
+  $(".js-test").removeAttr("disabled");
+  $(".js-test").text("RUN ALL TESTS");
+}
+
+$(document).ready(function(){
+  start_traffic_lights();
+  $(document).on("click", ".js-test", run_all_tests);
+
+});
+
+</script>
+</head>
+<body>
+
+  <table border=0>
+    <tr>
+      <th class="corner-top-left"></th>
+      <th class="dashed-border-vert">
+        <img class="js-traffic-n-s traffic-red" data-light="R">
+      </th>
+      <th></th>
+      <th class="corner-top-right"></th>
+    </tr>
+    <tr >
+      <th class="dashed-border-hor ">
+        <img class="traffic-green js-traffic-e-w" data-light="G">
+      </th>
+      <th class="dashed-border-hor dashed-border-vert"></th>
+      <th class="dashed-border-hor"></th>
+      <th class="dashed-border-hor"></th>
+    </tr>
+    <tr>
+      <th></th>
+      <th class="dashed-border-vert"></th>
+      <th></th>
+      <th>
+        <img class="traffic-green js-traffic-e-w" data-light="G">
+      </th>
+    </tr>
+    <tr>
+      <th class="corner-bottom-left"></th>
+      <th class="dashed-border-vert"></th>
+      <th>
+        <img class="traffic-red js-traffic-n-s" data-light="R">
+      </th>
+      <th class="corner-bottom-right"></th>
+    </tr>
+  </table>
+  <h3>Tests</h3>
+  <button class="js-test">RUN ALL TESTS</button>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+
+
+</body>
+</html>
