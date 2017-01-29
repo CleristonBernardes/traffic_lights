@@ -168,7 +168,6 @@ check_timer = function(){
       switch_light();
     }
     //assert
-    console.debug("global_timer", global_timer);
     assert.ok( global_timer === (24 * 60 * 60), "Timer stable.");
   });
 }

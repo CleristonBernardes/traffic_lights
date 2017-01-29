@@ -1,7 +1,7 @@
 var interval;
-var timer;
-var global_timer;
-var keep_log;
+var timer = 0;
+var global_timer = -30;
+var keep_log = true;
 
 //key period of time
 var _4min_30sec = 270;
