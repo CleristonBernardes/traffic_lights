@@ -31,6 +31,21 @@ yellow_light_check = function(){
   });
 }
 
+yellow_light_2_check = function(){
+  QUnit.test( "yellow_light_2_check", function(assert) {
+    //arrange
+    init();
+    reset_lights();
+    var cycle = (_30min + _4min_30sec) / _30sec;
+    var $green = $(".traffic-green");
+    //act
+    for (i = 0; i <= cycle; i++) {
+      switch_light();
+    }
+    // //assert
+    assert.ok( $green.hasClass("traffic-yellow"), "Switch from Green to Yellow." );
+  });
+}
 
 red_light_check = function(){
   QUnit.test( "red_light_check", function(assert) {
@@ -49,7 +64,7 @@ red_light_check = function(){
 }
 
 green_light_check = function(){
-  QUnit.test( "red_light_check", function(assert) {
+  QUnit.test( "green_light_check", function(assert) {
     //arrange
     init();
     reset_lights();
@@ -61,6 +76,22 @@ green_light_check = function(){
     }
     //assert
     assert.ok( $red.hasClass("traffic-green"), "Switch from Red to Green." );
+  });
+}
+
+small_period_check = function(){
+  QUnit.test( "small_period_check", function(assert) {
+    //arrange
+    init();
+    reset_lights();
+    var cycle = 240 / _30sec;
+    var $green = $(".traffic-green");
+    //act
+    for (i = 0; i <= cycle; i++) {
+      switch_light();
+    }
+    //assert
+    assert.ok( $green.hasClass("traffic-green"), "No light change." );
   });
 }
 
@@ -96,7 +127,7 @@ check_log_limit = function(){
 }
 
 check_log_active = function(){
-  QUnit.test( "check_log_limit", function(assert) {
+  QUnit.test( "check_log_active", function(assert) {
     //arrange
     init();
     reset_lights();
@@ -127,7 +158,7 @@ check_long_period = function(){
 }
 
 check_timer = function(){
-  QUnit.test( "check_log_limit", function(assert) {
+  QUnit.test( "check_timer", function(assert) {
     //arrange
     init();
     reset_lights();
@@ -137,6 +168,7 @@ check_timer = function(){
       switch_light();
     }
     //assert
-    assert.ok( global_timer -30 === (24 * 60 * 60), "Timer stable.");
+    console.debug("global_timer", global_timer);
+    assert.ok( global_timer === (24 * 60 * 60), "Timer stable.");
   });
 }

@@ -15,7 +15,7 @@
 switch_light = function(){
 
   global_timer += (global_timer <= Number.MAX_VALUE) ? _30sec : 0;
-  keep_log = (global_timer <= _30min);
+  keep_log = (global_timer < _30min);
 
   //only consider from 30 seconds before a cicle
   if (timer < _4min_30sec){
@@ -80,9 +80,11 @@ run_all_tests = function(){
 
   red_light_check();
   yellow_light_check();
+  yellow_light_2_check();
   green_light_check();
   check_log_limit();
   check_log_active();
+  small_period_check();
   check_long_period();
   double_cycle_check();
   check_timer();
