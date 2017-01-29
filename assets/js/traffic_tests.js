@@ -64,6 +64,22 @@ green_light_check = function(){
   });
 }
 
+double_cycle_check = function(){
+  QUnit.test( "double_cycle_check", function(assert) {
+    //arrange
+    init();
+    reset_lights();
+    var cycle = (_5min + _5min) / _30sec;
+    var $green = $(".traffic-green");
+    //act
+    for (i = 0; i <= cycle; i++) {
+      switch_light();
+    }
+    //assert
+    assert.ok( $green.hasClass("traffic-green"), "Switch from Green to Red and back to Green." );
+  });
+}
+
 check_log_limit = function(){
   QUnit.test( "check_log_limit", function(assert) {
     //arrange
@@ -121,7 +137,6 @@ check_timer = function(){
       switch_light();
     }
     //assert
-    console.debug("global_timer", global_timer);
     assert.ok( global_timer -30 === (24 * 60 * 60), "Timer stable.");
   });
 }
