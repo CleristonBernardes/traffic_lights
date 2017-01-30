@@ -1,0 +1,49 @@
+doctype html
+
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    script(src="https://code.jquery.com/jquery-1.10.2.js")
+    link(rel="stylesheet" href="../assets/css/traffic.css")
+
+    script
+      var _30sec = 30;
+      start_traffic_lights = function(){
+        interval = setInterval(switch_light, _30sec * 1000); //30 seconds loop
+      }
+      
+      $(document).ready(function(){
+        start_traffic_lights();
+        $(document).on("click", ".js-test", run_all_tests);
+
+      });
+    body
+      table(border=0)
+        tr
+          th.corner-top-left
+          th.dashed-border-vert
+            img.js-traffic-n-s traffic-red(data-light="R")
+          th
+          th.corner-top-right
+        tr
+          th.dashed-border-hor
+            img.traffic-green.js-traffic-e-w(data-light="G")
+          th.dashed-border-hor.dashed-border-vert
+          th.dashed-border-hor
+          th.dashed-border-hor
+        tr
+          th
+          th.dashed-border-vert
+          th
+          th
+            img.traffic-green.js-traffic-e-w(data-light="G")
+        tr
+          th.corner-bottom-left
+          th.dashed-border-vert
+          th
+            img.traffic-red.js-traffic-n-s(data-light="R")
+          th.corner-bottom-right
+        
+      
+      //- h3 Tests
+      //- button(class="js-test") RUN ALL TESTS
