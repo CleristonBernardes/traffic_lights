@@ -1,8 +1,9 @@
-var express = require('express');
-var bodyParser = require("body-parser");
-var global = require('global_variables');
-var controller = require('controller');
-var fs = require("fs");
+var express 		= require("express");
+var bodyParser 	= require("body-parser");
+// var global 			= require("global_variables");
+var traffic_c 	= require("./controller/traffic");
+// var fs 					= require("fs");
+
 
 var app = express();
 app.use(bodyParser.json());
@@ -14,6 +15,14 @@ app.use(function(err, req, res, next) {
 app.get('/', function (req, res) {
 	fs.readFile( global.data_path + "payload.json", 'utf8', function (err, data) {
 	   handleResponse(res, 200, data);
+	});
+})
+
+app.get('/traffic', function (req, res) {
+	traffic_c.switch_light(req.query, function (err, traffic) {
+		if err
+			return handleResponse(res, 400, err);
+		handleResponse(res, 200, traffic);
 	});
 })
 

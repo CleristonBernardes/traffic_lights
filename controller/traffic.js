@@ -28,7 +28,7 @@ switch_light = function(params, done){
     north_south.class = "traffic-green";
   }
   if (keep_log && ns_light !==$ns.data("light"))
-    console.debug(new Date()+" -> N-S trafic switched from " + ns_light + " to " + north_south.light);
+    console.log(new Date()+" -> N-S trafic switched from " + ns_light + " to " + north_south.light);
 
   if (ew_light === "G" && timer === _4min_30sec){
     east_west.light = "Y";
@@ -44,17 +44,18 @@ switch_light = function(params, done){
   }
 
   if (keep_log && ew_light !== $ew.data("light"))
-    console.debug(new Date()+" -> E-W trafic switched from " + ew_light + " to " + east_west.light);
+    console.log(new Date()+" -> E-W trafic switched from " + ew_light + " to " + east_west.light);
 
   if (timer === _5min)
     timer = _30sec; //restarting the cicle
   else
     timer += _30sec;
 
-  
+  done(null, {north_south, east_west});
+
 }
 
 
-module.export = {
+module.exports = {
   switch_light
 }
